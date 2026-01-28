@@ -1,21 +1,74 @@
 <template>
-  <section>
-    <h2>Бронирование</h2>
-    <div class="grid">
-      <input v-model.number="form.masterId" type="number" placeholder="ID мастера" />
-      <input v-model.number="form.serviceId" type="number" placeholder="ID услуги" />
-      <input v-model.number="form.carId" type="number" placeholder="ID авто" />
-      <input v-model="form.date" type="date" />
-      <button @click="loadSlots">Показать слоты</button>
+  <section class="space-y-6">
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-900">Бронирование</h2>
+      <p class="mt-1 text-sm text-slate-600">
+        Выберите мастера, услугу и доступный слот.
+      </p>
     </div>
 
-    <BookingCalendar :slots="slots" @select="selectSlot" />
-
-    <div v-if="selectedSlot" class="card">
-      <p>Выбранное время: {{ selectedSlot.startTime }}</p>
-      <button @click="createOrder">Забронировать</button>
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <input
+          v-model.number="form.masterId"
+          type="number"
+          placeholder="ID мастера"
+          class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+        />
+        <input
+          v-model.number="form.serviceId"
+          type="number"
+          placeholder="ID услуги"
+          class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+        />
+        <input
+          v-model.number="form.carId"
+          type="number"
+          placeholder="ID авто"
+          class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+        />
+        <input
+          v-model="form.date"
+          type="date"
+          class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+        />
+        <button
+          class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-700"
+          @click="loadSlots"
+        >
+          Показать слоты
+        </button>
+      </div>
     </div>
-    <p v-if="message">{{ message }}</p>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h3 class="text-sm font-semibold text-slate-700">Доступные слоты</h3>
+      <div class="mt-3">
+        <BookingCalendar :slots="slots" @select="selectSlot" />
+      </div>
+    </div>
+
+    <div
+      v-if="selectedSlot"
+      class="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p class="text-sm text-slate-700">
+        Выбранное время: <span class="font-medium text-slate-900">{{ selectedSlot.startTime }}</span>
+      </p>
+      <button
+        class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800"
+        @click="createOrder"
+      >
+        Забронировать
+      </button>
+    </div>
+
+    <p
+      v-if="message"
+      class="rounded-lg border border-brand-100 bg-brand-50 px-4 py-2 text-sm text-brand-700"
+    >
+      {{ message }}
+    </p>
   </section>
 </template>
 
@@ -55,16 +108,3 @@ const createOrder = async () => {
 }
 </script>
 
-<style scoped>
-.grid {
-  display: grid;
-  gap: 8px;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  margin-bottom: 12px;
-}
-.card {
-  border: 1px solid #eee;
-  padding: 12px;
-  margin-top: 12px;
-}
-</style>

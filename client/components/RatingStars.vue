@@ -1,9 +1,9 @@
 <template>
-  <div class="stars">
-    <span v-for="n in 5" :key="n">
+  <div class="flex items-center gap-1 text-amber-400">
+    <span v-for="n in 5" :key="n" class="text-base">
       {{ n <= rounded ? '★' : '☆' }}
     </span>
-    <span class="value">{{ value.toFixed(1) }}</span>
+    <span class="ml-1 text-xs text-slate-500">{{ value.toFixed(1) }}</span>
   </div>
 </template>
 
@@ -12,15 +12,3 @@ const props = defineProps<{ value: number }>()
 const rounded = computed(() => Math.round(props.value))
 </script>
 
-<style scoped>
-.stars {
-  color: #f5a623;
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-.value {
-  color: #444;
-  font-size: 12px;
-}
-</style>
