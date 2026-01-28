@@ -1,0 +1,63 @@
+services:
+  backend:
+    image: maven:3.9.8-eclipse-temurin-17
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+      - maven_cache:/root/.m2
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/autohub
+      SPRING_DATASOURCE_USERNAME: autohub
+      SPRING_DATASOURCE_PASSWORD: autohub
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      APP_JWT_SECRET: dev-secret-change-me-please-32-bytes
+    command: mvn -q spring-boot:run
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  client:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./client:/app
+      - client_node_modules:/app/node_modules
+    environment:
+      NUXT_PUBLIC_API_BASE: /api
+      NUXT_API_PROXY_TARGET: http://backend:8080
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3000"
+    ports:
+      - "3000:3000"
+
+  master:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./master:/app
+      - master_node_modules:/app/node_modules
+    environment:
+      NUXT_PUBLIC_API_BASE: /api
+      NUXT_API_PROXY_TARGET: http://backend:8080
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3001"
+    ports:
+      - "3001:3001"
+
+  admin:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./admin:/app
+      - admin_node_modules:/app/node_modules
+    environment:
+      NUXT_PUBLIC_API_BASE: /api
+      NUXT_API_PROXY_TARGET: http://backend:8080
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 3002"
+    ports:
+      - "3002:3002"
+
+volumes:
+  maven_cache:
+  client_node_modules:
+  master_node_modules:
+  admin_node_modules:
