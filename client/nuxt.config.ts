@@ -6,7 +6,7 @@ export default defineNuxtConfig({
       title: 'АвтоХаб'
     }
   },
-  css: ['~/assets/css/tailwind.css'],
+  css: ['~/assets/css/tailwind.css', 'leaflet/dist/leaflet.css'],
   modules: ['@nuxtjs/tailwindcss'],
   runtimeConfig: {
     public: {

@@ -6,6 +6,8 @@ export default defineNuxtConfig({
       title: 'АвтоХаб · Мастер'
     }
   },
+  css: ['~/assets/css/tailwind.css'],
+  modules: ['@nuxtjs/tailwindcss'],
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api'
