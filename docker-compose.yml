@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: autohub
+      POSTGRES_USER: autohub
+      POSTGRES_PASSWORD: autohub
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/autohub
+      SPRING_DATASOURCE_USERNAME: autohub
+      SPRING_DATASOURCE_PASSWORD: autohub
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      APP_JWT_SECRET: dev-secret-change-me-please-32-bytes
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+
+  client:
+    build:
+      context: ./client
+    environment:
+      NUXT_PUBLIC_API_BASE: /api
+      NUXT_API_PROXY_TARGET: http://backend:8080
+    ports:
+      - "3000:3000"
+
+  master:
+    build:
+      context: ./master
+    environment:
+      NUXT_PUBLIC_API_BASE: /api
+      NUXT_API_PROXY_TARGET: http://backend:8080
+    command: npm run preview -- --host 0.0.0.0 --port 3001
+    ports:
+      - "3001:3001"
+
+  admin:
+    build:
+      context: ./admin
+    environment:
+      NUXT_PUBLIC_API_BASE: /api
+      NUXT_API_PROXY_TARGET: http://backend:8080
+    command: npm run preview -- --host 0.0.0.0 --port 3002
+    ports:
+      - "3002:3002"
+
+volumes:
+  db_data:
